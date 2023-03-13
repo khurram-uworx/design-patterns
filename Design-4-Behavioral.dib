@@ -1,0 +1,186 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"name":"csharp","aliases":["c#","C#"],"languageName":"C#"},{"name":"vscode","aliases":["frontend"]},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"webview","aliases":[]},{"name":".NET","aliases":[]},{"name":"fsharp","aliases":["f#","F#"],"languageName":"F#"},{"name":"html","aliases":[],"languageName":"HTML"},{"name":"kql","aliases":[],"languageName":"KQL"},{"name":"mermaid","aliases":[],"languageName":"Mermaid"},{"name":"pwsh","aliases":["powershell"],"languageName":"PowerShell"},{"name":"sql","aliases":[],"languageName":"SQL"},{"name":"value","aliases":[]}]}}
+
+#!markdown
+
+# Command
+
+https://en.wikipedia.org/wiki/Command_pattern
+
+#!csharp
+
+interface ICommand { void Execute(); }
+
+class Switch
+{
+    ICommand closeCommand;
+    ICommand openCommand;
+
+    public Switch(ICommand closeCommand, ICommand openCommand)
+    {
+        this.closeCommand = closeCommand;
+        this.openCommand = openCommand;
+    }
+
+    // Close the circuit / power on
+    public void Close()
+    {
+       this.closeCommand.Execute();
+    }
+
+    // Open the circuit / power off
+    public void Open()
+    {
+        this.openCommand.Execute();
+    }
+}
+
+class GPIOCloseCommand : ICommand
+{}
+
+class GPIOOpenCommand : ICommand
+{}
+
+class WifiCloseCommand : ICommand
+{}
+
+class WifiOpenCommand : ICommand
+{}
+
+var s = new Switch(new GPIOCloseCommand(), new GPIOOpenCommand());
+s.Close();
+s.Open();
+
+#!csharp
+
+#r "System.Data"
+#r "nuget: System.Data.SqlClient, *-*"
+
+using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
+
+var connectionString = "";
+var sql = "";
+
+using (var connection = new SqlConnection(connectionString))
+{
+    var cmd = new SqlCommand(sql, connection);
+    cmd.ExecuteScaler();
+    cmd.ExecuteNonQuery();
+}
+
+#!markdown
+
+# Iterator
+https://en.wikipedia.org/wiki/Iterator_pattern
+
+#!csharp
+
+class Student { public int ID { get; set; } }
+
+class StudentRepository : IEnumerator<Student>, IEnumerable<Student>
+{
+    int count = 0;
+    int cursor = -1;
+    Student[] students = new Student[10];
+
+    public bool AddStudent(Student student)
+    {
+        this.students[this.count] = student;
+        this.count++;
+        return true;
+    }
+
+    public Student Current => this.students[this.cursor];
+
+    object IEnumerator.Current => this.Current;
+
+    public void Dispose() { }
+
+    public bool MoveNext()
+    {
+        if (this.cursor < this.count - 1)
+        {
+            this.cursor++;
+            return true;
+        }
+
+        return false;
+    }
+
+    public void Reset() { }
+
+    public IEnumerator<Student> GetEnumerator() => this;
+    IEnumerator IEnumerable.GetEnumerator() => this;
+};
+
+#!csharp
+
+var repo = new StudentRepository();
+repo.AddStudent(new Student() { ID = 7350 });
+repo.AddStudent(new Student() { ID = 7352 });
+repo.AddStudent(new Student() { ID = 7354 });
+
+foreach(var s in repo) { Console.WriteLine(s.ID); }
+
+#!markdown
+
+# Visitor
+https://en.wikipedia.org/wiki/Visitor_pattern
+
+#!csharp
+
+var list = new List<Student>();
+list.Add(new Student() { ID = 7350 });
+list.Add(new Student() { ID = 7351 });
+list.Add(new Student() { ID = 7352 });
+list.Add(new Student() { ID = 7353 });
+list.Add(new Student() { ID = 7354 });
+
+Action<Student> studentPrinter = (s) =>
+{
+    Console.WriteLine(s.ID);
+};
+
+Action<Student> highAchiever = (s) =>
+{
+    if (s.ID == 7352) Console.WriteLine($"{s.ID} is high achiever");
+};
+
+foreach(var s in list)
+{
+    studentPrinter(s);
+    highAchiever(s);
+}
+
+#!markdown
+
+# Pipeline Oriented Programming
+
+https://github.com/swlaschin/pipeline_oriented_programming_talk
+
+https://github.com/hocho/PipelineStyle
+
+#!fsharp
+
+// using a pipe when functions have exactly one parameter
+let add1 x = x + 1
+let square x = x * x
+let double x = x * x
+
+5
+|> add1
+|> square
+|> double
+
+#!fsharp
+
+// using a pipe when functions have more than one parameter
+let add x y = x + y
+let times x y = x * y
+
+5
+|> add 1
+|> times 2

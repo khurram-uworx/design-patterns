@@ -1,0 +1,136 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"name":"csharp","languageName":"C#","aliases":["c#","C#"]},{"name":"vscode","aliases":["frontend"],"languageName":null},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"webview","aliases":[]},{"name":".NET","aliases":[],"languageName":null},{"name":"fsharp","languageName":"F#","aliases":["f#","F#"]},{"name":"html","languageName":"HTML","aliases":[]},{"name":"kql","languageName":"KQL","aliases":[]},{"name":"mermaid","languageName":"Mermaid","aliases":[]},{"name":"pwsh","languageName":"PowerShell","aliases":["powershell"]},{"name":"sql","languageName":"SQL","aliases":[]},{"name":"value","aliases":[],"languageName":null}]}}
+
+#!markdown
+
+# Adapter
+
+https://en.wikipedia.org/wiki/Adapter_pattern
+
+#!csharp
+
+#r "System.Data"
+#r "nuget: System.Data.SqlClient, *-*"
+
+using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
+
+var connectionString = "";
+var sql = "";
+var dataset = new DataSet();
+
+using (var connection = new SqlConnection(connectionString))
+{
+    var adapter = new SqlDataAdapter();
+    adapter.SelectCommand = new SqlCommand(sql, connection);
+    adapter.Fill(dataset); //we also have few more like Update
+    return dataset;
+}
+
+#!csharp
+
+class RandomNumberGenerator { public int GetNumber() => 5; }
+class RandomCharacterGenerator { public char GetCharacter() => 'a'; }
+
+interface IPasswordGenerator { string GetStrongPassword(); }
+
+class StrongPasswordGenerator : IPasswordGenerator
+{
+    RandomNumberGenerator number = new ();
+    RandomCharacterGenerator character = new ();
+
+    public string GetStrongPassword()
+    {
+        return $"{character.GetCharacter()}{character.GetCharacter()}{number.GetNumber()}{number.GetNumber()}{character.GetCharacter()}{character.GetCharacter()}";
+    }
+}
+
+#!csharp
+
+void ExecuteCommand(Func<string> GetCommand)
+{
+    Console.WriteLine($"Running {GetCommand()}");
+}
+
+string BuildCommand(string command, params string[] list)
+{
+    var sb = new StringBuilder();
+    sb.Append(command);
+
+    foreach(var i in list)
+        sb.Append($" {i}");
+    
+    return sb.ToString();
+}
+
+ExecuteCommand(() => "format c");
+
+ExecuteCommand(() => BuildCommand("format", "c", "d", "e"));
+
+#!markdown
+
+# Composite
+
+https://en.wikipedia.org/wiki/Factory_method_pattern
+
+Windows Forms
+
+XAML / Front-end Components
+
+#!csharp
+
+class Component { }
+
+#!markdown
+
+# Facade
+
+https://en.wikipedia.org/wiki/Facade_pattern
+
+#!csharp
+
+class ZipSystem
+{
+    public string Initialize() => "Zip: Ready";
+    public string Operation() => "Zip: Operation";
+}
+
+class System1
+{
+    public string Initialize() => "System 1: Ready";
+    public string Operation() => "System 1: Operation";
+}
+
+class System2
+{
+    public string Initialize() => "System 2: Ready";
+    public string Operation() => "System 2: Operation";
+}
+
+class Facade
+{
+    ZipSystem zip;
+    System1 system;
+
+    public Facade(ZipSystem zip, System1 system)
+    {
+        this.zip = zip;
+        this.system = system;
+    }
+
+    public void Operation()
+    {
+        Console.WriteLine(this.zip.Initialize());
+        Console.WriteLine(this.system.Initialize());
+
+        Console.WriteLine("Doing something else");
+
+        Console.WriteLine(this.zip.Operation());
+        Console.WriteLine(this.system.Operation());
+    }
+}
+
+var f = new Facade(new ZipSystem(), new System1());
+f.Operation();

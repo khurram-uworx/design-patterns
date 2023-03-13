@@ -1,0 +1,233 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"name":"csharp","aliases":["c#","C#"],"languageName":"C#"},{"name":"vscode","aliases":["frontend"]},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"webview","aliases":[]},{"name":".NET","aliases":[]},{"name":"fsharp","aliases":["f#","F#"],"languageName":"F#"},{"name":"html","aliases":[],"languageName":"HTML"},{"name":"kql","aliases":[],"languageName":"KQL"},{"name":"mermaid","aliases":[],"languageName":"Mermaid"},{"name":"pwsh","aliases":["powershell"],"languageName":"PowerShell"},{"name":"sql","aliases":[],"languageName":"SQL"},{"name":"value","aliases":[]}]}}
+
+#!markdown
+
+# Singleton
+
+https://en.wikipedia.org/wiki/Singleton_pattern
+
+#!csharp
+
+using System.Threading;
+
+class Singleton
+{
+    static readonly object lockObject = new object();
+
+    static volatile Singleton instance; //volatile importance
+
+    string value = null;
+
+    Singleton() 
+    {
+        Console.WriteLine("ctor started");
+        Thread.Sleep(5000);
+        value = "Heavy initialization";
+        Console.WriteLine("ctor finished");
+    }
+
+    public string Value => value;
+
+    public static Singleton Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                lock (lockObject)
+                {
+                    if (instance == null)
+                    {
+                        instance = new Singleton();
+                    }
+                }
+            }
+            return instance;
+        }
+    }
+}
+
+Singleton.Instance.Value
+
+#!csharp
+
+using System.Threading;
+
+class Singleton
+{
+    static readonly Singleton instance = new Singleton();
+
+    string value = null;
+
+    static Singleton() 
+    {
+        Console.WriteLine("ctor started");
+        Thread.Sleep(5000);
+        value = "Heavy initialization";
+        Console.WriteLine("ctor finished");
+    }
+
+    public string Value => value;
+
+    public static Singleton Instance => instance;
+    public static int Number => 5;
+}
+
+Console.WriteLine(Singleton.Number);
+Singleton.Instance.Value
+
+#!csharp
+
+using System.Threading;
+
+class Singleton
+{
+    static readonly Lazy<Singleton> instance = new (() => new Singleton());  
+
+    string value = null;
+
+    Singleton() 
+    {
+        Console.WriteLine("ctor");
+        Thread.Sleep(5000);
+        value = "Heavy initialization";
+    }
+
+    public string Value => value;
+
+    public static Singleton Instance => instance.Value;
+    public static int Number => 5;
+}
+
+Console.WriteLine(Singleton.Number);
+Singleton.Instance.Value
+
+#!csharp
+
+public interface ILog
+{
+    void Log();
+}
+
+public abstract class BaseEntity : ILog
+{
+    public abstract void LoadEntity();
+
+    void ILog.Log()
+    {
+        //filelogs
+    }
+}
+
+sealed class Student : BaseEntity
+{
+    Student() {}
+
+    public class EngineeringStudentFactory
+    {
+
+    }
+
+
+    public override void LoadEntity()
+    {}
+
+    public void LoadStudent(int studentNumber)
+    {   
+        //Log();
+        LoadEntity();
+    }
+}
+
+var s = new Student();
+var s2 = s as ILog;
+s2.Log();
+
+#!markdown
+
+# Factory Methods
+
+https://en.wikipedia.org/wiki/Factory_method_pattern
+
+#!csharp
+
+// var s = Student.CreateStudent();
+// var s = Student.CreateDauScholler();
+// var s = await Student.CreateEngineeringStudentAsync("Mechanical");
+// var s = EngineeringStudentFactory.CreateStudent("Mechanical);
+// var s = Student.EngineeringFactory.CreateStudent("Mechanical");
+// var s = Student.EngineeringFactory.CreateMechanicalStudent();
+
+Task t = Task.Factory.StartNew(() =>
+{
+    Thread.Sleep(3000);
+    Console.WriteLine("Long running task completed");
+});
+
+//t.Wait();
+await t;
+
+#!markdown
+
+# Abstract Factory
+
+https://en.wikipedia.org/wiki/Abstract_factory_pattern
+
+#!csharp
+
+//Abstract factory
+public abstract class DbProviderFactory
+{
+    public abstract DbConnection CreateConnection();
+    public abstract DbCommand CreateCommand();
+}
+
+//Concrete factory
+public class SqlClientFactory : DbProviderFactory
+{
+    public override DbConnection CreateConnection() 
+        => new SqlConnection();
+    
+    public override DbCommand CreateCommand() 
+        => new SqlCommand();
+}
+
+//Concrete factory
+public class PostgreSqlClientFactory : DbProviderFactory
+{
+    public override DbConnection CreateConnection() 
+        => new PostgreSqlConnection();
+        
+    public override DbCommand CreateCommand() 
+        => new PostgreSqlCommand();
+}
+
+#!markdown
+
+# Creating Objects
+
+#!csharp
+
+var r = Activator.CreateInstance(typeof(DateTime), 60);
+
+//var o = Activator.CreateInstance("", "");
+//var r = o.Unwrap();
+
+static object createInstanceHelper(string assemblyName, string typeName)
+{
+    object oToReturn = null;
+    System.Runtime.Remoting.ObjectHandle h = Activator.CreateInstance(assemblyName, typeName);
+    if (null != h)
+    {
+        oToReturn = h.Unwrap();
+        return oToReturn;
+    }
+    else
+        throw new ApplicationException("Activator.CreateInstance() returned null ObjectHandle for type " + typeName + " from assembly " + assemblyName);
+
+}
+
+var f = new[] { r.GetType().ToString(), r };
+f
