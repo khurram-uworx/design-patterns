@@ -104,47 +104,6 @@ class Singleton
 Console.WriteLine(Singleton.Number);
 Singleton.Instance.Value
 
-#!csharp
-
-public interface ILog
-{
-    void Log();
-}
-
-public abstract class BaseEntity : ILog
-{
-    public abstract void LoadEntity();
-
-    void ILog.Log()
-    {
-        //filelogs
-    }
-}
-
-sealed class Student : BaseEntity
-{
-    Student() {}
-
-    public class EngineeringStudentFactory
-    {
-
-    }
-
-
-    public override void LoadEntity()
-    {}
-
-    public void LoadStudent(int studentNumber)
-    {   
-        //Log();
-        LoadEntity();
-    }
-}
-
-var s = new Student();
-var s2 = s as ILog;
-s2.Log();
-
 #!markdown
 
 # Factory Methods

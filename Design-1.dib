@@ -1,6 +1,6 @@
 #!meta
 
-{"kernelInfo":{"defaultKernelName":"csharp","items":[{"name":"csharp","languageName":"C#","aliases":["c#","C#"]},{"name":"vscode","aliases":["frontend"]},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"webview","aliases":[]},{"name":".NET","aliases":[]},{"name":"fsharp","languageName":"F#","aliases":["f#","F#"]},{"name":"html","languageName":"HTML","aliases":[]},{"name":"kql","languageName":"KQL","aliases":[]},{"name":"mermaid","languageName":"Mermaid","aliases":[]},{"name":"pwsh","languageName":"PowerShell","aliases":["powershell"]},{"name":"sql","languageName":"SQL","aliases":[]},{"name":"value","aliases":[]}]}}
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"name":"csharp","aliases":["c#","C#"],"languageName":"C#"},{"name":"vscode","aliases":["frontend"]},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"webview","aliases":[]},{"name":".NET","aliases":[]},{"name":"fsharp","aliases":["f#","F#"],"languageName":"F#"},{"name":"html","aliases":[],"languageName":"HTML"},{"name":"kql","aliases":[],"languageName":"KQL"},{"name":"mermaid","aliases":[],"languageName":"Mermaid"},{"name":"pwsh","aliases":["powershell"],"languageName":"PowerShell"},{"name":"sql","aliases":[],"languageName":"SQL"},{"name":"value","aliases":[]}]}}
 
 #!markdown
 
@@ -12,10 +12,41 @@
 
 #!csharp
 
-//Placeholder
+public interface ILog
+{
+    void Log();
+}
 
-#!markdown
+public abstract class BaseEntity : ILog
+{
+    public abstract void LoadEntity();
 
-https://en.wikipedia.org/wiki/Software_design_pattern
+    void ILog.Log()
+    {
+        //filelogs
+    }
+}
 
-https://en.wikipedia.org/wiki/Design_Patterns
+sealed class Student : BaseEntity
+{
+    Student() {}
+
+    public class EngineeringStudentFactory
+    {
+
+    }
+
+
+    public override void LoadEntity()
+    {}
+
+    public void LoadStudent(int studentNumber)
+    {   
+        //Log();
+        LoadEntity();
+    }
+}
+
+var s = new Student();
+var s2 = s as ILog;
+s2.Log();
