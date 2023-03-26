@@ -105,6 +105,31 @@ using (var connection = new SqlConnection(connectionString))
     }
 }
 
+#!csharp
+
+#r "nuget: Npgsql , *-*"
+
+using Npgsql;
+
+//postgres://postgres:postgrespw@localhost:32768
+var connectionString = "Host=localhost:32768;Username=postgres;Password=postgrespw;Database=postgres";
+var sql = "select now()";
+
+using (var connection = new NpgsqlConnection(connectionString))
+{
+    try
+    {
+        connection.Open();
+        var cmd = new NpgsqlCommand(sql, connection);
+        var dt = (DateTime)cmd.ExecuteScalar();
+        Console.WriteLine(dt);
+    }
+    finally
+    {
+        connection.Close();
+    }
+}
+
 #!markdown
 
 # Iterator

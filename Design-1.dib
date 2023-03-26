@@ -50,3 +50,47 @@ sealed class Student : BaseEntity
 var s = new Student();
 var s2 = s as ILog;
 s2.Log();
+
+#!csharp
+
+// Dependency
+
+class Bar {}
+
+class Foo
+{
+    void fooMethod(Bar bar) {}
+}
+
+#!csharp
+
+// Association
+
+class Bar {}
+
+class Foo
+{
+    Bar bar;
+}
+
+#!csharp
+
+// Composition
+
+class Bar {}
+
+class Foo
+{
+    Bar bar = new();
+}
+
+#!csharp
+
+// Aggregation
+
+class Bar {}
+
+class Foo
+{
+    List<Bar> bars = new();
+}
