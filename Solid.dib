@@ -16,6 +16,8 @@
 
 ## Single Responsibility Principle
 
+A class should have only one reason to change
+
 https://en.wikipedia.org/wiki/Single-responsibility_principle
 
 #!csharp
@@ -33,42 +35,18 @@ class LoginPage
 
 #!markdown
 
-## The Open Closed Principle (OCP)
-
-https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle
-
-#!csharp
-
-class Square
-{
-    public int Side {get;set;}
-}
-
-class Circle
-{
-    public int Radius {get;set;}
-}
-
-class AreaCalculator
-{
-    public int Area(Square shape)
-    {
-        return shape.Side * shape.Side;
-    }
-}
-
-#!markdown
-
 ## The Liskov Substitution Principle (LSP)
+
+If S is a subtype of T, then objects of type T should be replaced with objects of type S
 
 https://en.wikipedia.org/wiki/Liskov_substitution_principle
 
 #!csharp
 
-abstract class Hypervisor
+abstract class Hypervisor //or virtual methods
 {}
 
-sealed class AzureHypervisor : Hypervisor
+sealed class AzureHypervisor : Hypervisor //overrides
 {}
 
 sealed class HyperVHypervisor : Hypervisor
@@ -81,7 +59,46 @@ class VirtualApi
 
 #!markdown
 
+## The Open Closed Principle (OCP)
+
+- A module will be said to be open if it is still available for extension. For example, it should be possible to add fields to the data structures it contains, or new elements to the set of functions it performs.
+- A module will be said to be closed if [it] is available for use by other modules. This assumes that the module has been given a well-defined, stable description (the interface in the sense of information hiding).
+
+https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle
+
+- Overloads and Overrides
+- Default Parameters and Extension Methods
+
+#!csharp
+
+class Square
+{
+    public int Side {get;set;}
+}
+
+class AreaCalculator
+{
+    public int Area(Square shape)
+    {
+        return shape.Side * shape.Side;
+    }
+}
+
+class Circle
+{
+    public int Radius {get;set;}
+}
+
+//Invoice + Sales Order example; line item calculations
+//type of invoice may be
+//Understand the liskov subsitution; different replaceable calculators; Discount Calculators; Sales and Discounts
+
+#!markdown
+
 ## The Dependency Inversion Principle (DIP)
+
+- High-level modules should not import anything from low-level modules. Both should depend on abstractions (e.g., interfaces).
+- Abstractions should not depend on details. Details (concrete implementations) should depend on abstractions.
 
 https://en.wikipedia.org/wiki/Dependency_inversion_principle
 
@@ -90,9 +107,20 @@ https://en.wikipedia.org/wiki/Dependency_inversion_principle
 interface IHypervisor
 {}
 
+interface ITestData
+{}
+
+interface IRepository
+{}
+
+//System.Web example
+
 #!markdown
 
 ## The Interface Segregation Principle (ISP)
+
+- Mo class should be forced to implement any method(s) they don’t use.
+- Instead of creating large interfaces, create multiple smaller interfaces
 
 https://en.wikipedia.org/wiki/Interface_segregation_principle
 
