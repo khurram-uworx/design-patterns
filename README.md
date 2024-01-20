@@ -1,3 +1,9 @@
+# Git
+
+- Setup git if your main user is different
+    - git config user.name "Your Name Here"
+    - git config user.email your@email.com
+
 # What is .NET
 
 https://www.youtube.com/watch?v=bEfBfBQq7EE&t=862s
